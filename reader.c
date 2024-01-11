@@ -5,10 +5,40 @@
 #define VENDORID  0x054c
 #define PRODUCTID 0x09cc
 #define HID_INTRF 3
+#define HID_GET_REPORT 0x01
+#define HID_REPORT_TYPE_INPUT 0x01
+
+static void display_buffer_hex(unsigned char *buffer, unsigned size)
+{
+	unsigned i, j, k;
+
+	for (i=0; i<size; i+=16) {
+		printf("\n  %08x  ", i);
+		for(j=0,k=0; k<16; j++,k++) {
+			if (i+j < size) {
+				printf("%02x", buffer[i+j]);
+			} else {
+				printf("  ");
+			}
+			printf(" ");
+		}
+		printf(" ");
+		for(j=0,k=0; k<16; j++,k++) {
+			if (i+j < size) {
+				if ((buffer[i+j] < 32) || (buffer[i+j] > 126)) {
+					printf(".");
+				} else {
+					printf("%c", buffer[i+j]);
+				}
+			}
+		}
+	}
+	printf("\n" );
+}
 
 void check_err(libusb_context *context, libusb_device_handle *handle, int err, char* err_msg){
     if (err != LIBUSB_SUCCESS) {
-        fprintf(stderr, "%s error: %d\n", err_msg, err);
+        fprintf(stderr, "\n%s error: %s\n", err_msg, libusb_strerror((enum libusb_error)err));   
         libusb_close(handle);
         libusb_exit(context);
         exit(1);
@@ -64,9 +94,17 @@ void claim_intrf(libusb_context *context, libusb_device_handle *handle, int intr
     int claim_err = libusb_claim_interface(handle, intrf_n); 
 
     check_err(context, handle, claim_err, "Failed to claim interface");
-
 }
 
+void read_hid(libusb_context *context, libusb_device_handle *handle, struct libusb_endpoint_descriptor in_ep){
+    int size = 0x40;
+    uint8_t *report_buffer = (uint8_t*) calloc(size, 1);
+    printf("\nTesting interrupt read using endpoint %02X...\n", in_ep.bEndpointAddress);
+	int read_err = libusb_interrupt_transfer(handle, in_ep.bEndpointAddress, report_buffer, size, &size, 5000);
+    check_err(context, handle, read_err, "cant read");
+
+	display_buffer_hex(report_buffer, size);
+}
 
 int main() {
     libusb_context *context = NULL;
@@ -94,6 +132,11 @@ int main() {
 
     printf("in endpoint address: %d\n", in_ep.bEndpointAddress);
     printf("out endpoint address: %d\n", out_ep.bEndpointAddress);
+
+    while (1){
+        read_hid(context, handle, in_ep);
+    }
+
 
     libusb_close(handle);
     libusb_exit(context);
