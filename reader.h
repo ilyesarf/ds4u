@@ -56,7 +56,7 @@ void get_config_info(libusb_context *context, libusb_device_handle *handle, stru
 
 void claim_intrf(libusb_context *context, libusb_device_handle *handle, int intrf_n);
 
-void read_hid(libusb_context *context, libusb_device_handle *handle, struct libusb_endpoint_descriptor in_ep);
+void read_hid(libusb_context *context, libusb_device_handle *handle, struct libusb_endpoint_descriptor in_ep, uint8_t **report_buffer, int* size);
 
 void init_usb_reader(libusb_context **context, libusb_device_handle **handle, struct libusb_endpoint_descriptor *in_ep, struct libusb_endpoint_descriptor *out_ep);
 

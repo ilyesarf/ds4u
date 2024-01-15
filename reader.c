@@ -53,21 +53,6 @@ void claim_intrf(libusb_context *context, libusb_device_handle *handle, int intr
     check_err(context, handle, claim_err, "Failed to claim interface");
 }
 
-void read_hid(libusb_context *context, libusb_device_handle *handle, struct libusb_endpoint_descriptor in_ep){
-    int size = 0x40;
-    uint8_t *report_buffer = (uint8_t*) calloc(size, 1);
-    printf("\nTesting interrupt read using endpoint %02X...\n", in_ep.bEndpointAddress);
-	int read_err = libusb_interrupt_transfer(handle, in_ep.bEndpointAddress, report_buffer, size, &size, 5000);
-    check_err(context, handle, read_err, "cant read");
-
-	//display_buffer_hex(report_buffer, size);
-    for (int i=0; i<size;i++){
-        printf("%02x ", report_buffer[i]);
-    }
-
-    printf("\n");
-
-}
 
 void init_usb_reader(libusb_context **context, libusb_device_handle **handle, struct libusb_endpoint_descriptor *in_ep, struct libusb_endpoint_descriptor *out_ep) {
 
@@ -90,5 +75,12 @@ void init_usb_reader(libusb_context **context, libusb_device_handle **handle, st
 
     *in_ep = conf_desc->interface[HID_INTRF].altsetting->endpoint[0];
     *out_ep = conf_desc->interface[HID_INTRF].altsetting->endpoint[1];
+
+}
+
+void read_hid(libusb_context *context, libusb_device_handle *handle, struct libusb_endpoint_descriptor in_ep, uint8_t **report_buffer, int *size){
+    printf("\nTesting interrupt read using endpoint %02X (data size %d)...\n", in_ep.bEndpointAddress, *size);
+	int read_err = libusb_interrupt_transfer(handle, in_ep.bEndpointAddress, *report_buffer, *size, size, 5000);
+    check_err(context, handle, read_err, "cant read");	
 
 }
