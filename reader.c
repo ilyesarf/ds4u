@@ -60,42 +60,35 @@ void read_hid(libusb_context *context, libusb_device_handle *handle, struct libu
 	int read_err = libusb_interrupt_transfer(handle, in_ep.bEndpointAddress, report_buffer, size, &size, 5000);
     check_err(context, handle, read_err, "cant read");
 
-	display_buffer_hex(report_buffer, size);
+	//display_buffer_hex(report_buffer, size);
+    for (int i=0; i<size;i++){
+        printf("%02x ", report_buffer[i]);
+    }
+
+    printf("\n");
+
 }
 
-int main() {
-    libusb_context *context = NULL;
-    libusb_device_handle *handle = NULL;
+void init_usb_reader(libusb_context **context, libusb_device_handle **handle, struct libusb_endpoint_descriptor *in_ep, struct libusb_endpoint_descriptor *out_ep) {
 
-    connect_device(context, &handle);
+    connect_device(*context, handle);
     printf("device conntected successfully\n");
     
-    print_device_info(context, handle);
+    print_device_info(*context, *handle);
 
     struct libusb_config_descriptor *conf_desc;
 
-    get_config_info(context, handle, &conf_desc);
+    get_config_info(*context, *handle, &conf_desc);
     int intrf_n = conf_desc->bNumInterfaces;
     printf("device has %d interfaces\n", intrf_n);
 
-    detach_device(context, handle, intrf_n);
+    detach_device(*context, *handle, intrf_n);
     printf("all interfaces are detached from kernel drivers\n");
 
-    claim_intrf(context, handle, HID_INTRF);
+    claim_intrf(*context, *handle, HID_INTRF);
     printf("interface number %d is claimed\n", intrf_n);
 
-    struct libusb_endpoint_descriptor in_ep = conf_desc->interface[HID_INTRF].altsetting->endpoint[0];
-    struct libusb_endpoint_descriptor out_ep = conf_desc->interface[HID_INTRF].altsetting->endpoint[1];
+    *in_ep = conf_desc->interface[HID_INTRF].altsetting->endpoint[0];
+    *out_ep = conf_desc->interface[HID_INTRF].altsetting->endpoint[1];
 
-    printf("in endpoint address: %d\n", in_ep.bEndpointAddress);
-    printf("out endpoint address: %d\n", out_ep.bEndpointAddress);
-
-    while (1){
-        read_hid(context, handle, in_ep);
-    }
-
-    libusb_close(handle);
-    libusb_exit(context);
-
-    return 0;
 }
