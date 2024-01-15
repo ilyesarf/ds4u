@@ -1,5 +1,5 @@
-#include <libusb-1.0/libusb.h>
 #include "reader.h"
+#include "parser.h"
 
 int main(){
     libusb_context *context = NULL;
@@ -13,13 +13,15 @@ int main(){
 
     while (1){
         read_hid(context, handle, in_ep, &report_buffer, &size);
-        
+
         //display_buffer_hex(report_buffer, size);
+        /*
         for (int i=0; i<size;i++){
             printf("%02x ", report_buffer[i]);
         }
 
-        printf("\n");
+        printf("\n");*/
+        parse_buf(report_buffer);
     }
     
     printf("in endpoint address: %d\n", in_ep.bEndpointAddress);

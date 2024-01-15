@@ -2,9 +2,9 @@ BUILDDIR=$(CURDIR)/bin
 
 CC = clang
 CFLAGS = -Wall -g
-LDFLAGS = -lusb-1.0
+LDFLAGS = -lusb-1.0 -lm
 
-SOURCES = ds4u.c reader.c
+SOURCES = ds4u.c reader.c parser.c
 OBJECTS = $(addprefix $(BUILDDIR)/,$(SOURCES:.c=.o))
 
 .PHONY: all clean

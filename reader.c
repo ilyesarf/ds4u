@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <libusb-1.0/libusb.h>
 #include "reader.h"
 
 void connect_device(libusb_context *context, libusb_device_handle **handle){
