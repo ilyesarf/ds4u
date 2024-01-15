@@ -1,4 +1,4 @@
 *.swp
-*.gitignore
+*.vscode
 bin/
 notes
