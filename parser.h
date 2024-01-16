@@ -1,16 +1,21 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct Button{
     char name[10];
     uint8_t id;
     void (*is_pressed)(struct Button*, uint8_t data);
-    int state;
+    bool state;
 };
 
-static void is_pressed(struct Button* button, uint8_t data){
-    button->state = ((data & button->id) != 0)  ? 1 : 0;
+static void btn_is_pressed(struct Button* button, uint8_t data){
+    button->state = ((data & button->id) != 0);
+}
+
+static void dpad_is_pressed(struct Button* button, uint8_t data){
+    button->state = (data == 0);
 }
 
 

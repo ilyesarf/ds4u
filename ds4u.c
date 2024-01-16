@@ -7,12 +7,23 @@
 
 
 void init_buttons(int n, struct Button *state[]){
-    char* names[7] = {"square", "cross", "circle", "triangle"};
+    char* names[10] = {"square", "cross", "circle", "triangle"};
     for (int i=0; i<n; i++){
         strcpy(state[i]->name, names[i]);
          
         state[i]->id = pow(2, (i+4));
-        state[i]->is_pressed = is_pressed;
+        state[i]->is_pressed = btn_is_pressed;
+    }
+
+}
+
+void init_dpad(int n, struct Button *state[]){
+    char* names[4] = {"up", "right", "down", "left"};
+    for (int i=0; i<n; i++){
+        strcpy(state[i]->name, names[i]);
+         
+        state[i]->id = i*2;
+        state[i]->is_pressed = dpad_is_pressed;
     }
 
 }
