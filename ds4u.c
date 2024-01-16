@@ -18,11 +18,11 @@ void init_buttons(int n, struct Button *state[]){
 }
 
 void init_dpad(int n, struct Button *state[]){
-    char* names[4] = {"up", "right", "down", "left"};
-    for (int i=0; i<n; i++){
-        strcpy(state[i]->name, names[i]);
+    char* names[10] = {"up", "right", "down", "left"};
+    for (int i=4; i<(n+4); i++){ //+4 to skip buttons
+        strcpy(state[i]->name, names[i-4]);
          
-        state[i]->id = i*2;
+        state[i]->id = (i-4)*2;
         state[i]->is_pressed = dpad_is_pressed;
     }
 
@@ -30,10 +30,15 @@ void init_dpad(int n, struct Button *state[]){
 
 void init_state(struct Button *state[]){
 
-    int n = 4; //number of buttons
+    int n = 4; //number of buttons & dpad
 
     init_buttons(n, state);
+    init_dpad(n, state);
     for (int i=0; i<n; i++){
+        printf("Button `%s` with id `%02x` is added to state\n", state[i]->name, state[i]->id);
+    }
+    
+    for (int i=4; i<n+4; i++){
         printf("Button `%s` with id `%02x` is added to state\n", state[i]->name, state[i]->id);
     }
 }

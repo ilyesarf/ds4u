@@ -15,7 +15,11 @@ static void btn_is_pressed(struct Button* button, uint8_t data){
 }
 
 static void dpad_is_pressed(struct Button* button, uint8_t data){
-    button->state = (data == 0);
+    if ((data&0xF) == 0x07 && button->id == 0x00){
+        button->state = true;
+    } else{
+        button->state = (((data&0xF) == button->id) || (((data&0xF)-1) == button->id) || (((data&0xF)+1) == button->id)); //&0xF because DPAD data is the last digit
+    }
 }
 
 
