@@ -1,15 +1,17 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <math.h>
 
 struct Button{
-    char name[7];
+    char name[10];
     uint8_t id;
-    int is_pressed;
-}; 
+    void (*is_pressed)(struct Button*, uint8_t data);
+    int state;
+};
 
-void parse_buttons(uint8_t data);
+static void is_pressed(struct Button* button, uint8_t data){
+    button->state = ((data & button->id) != 0)  ? 1 : 0;
+}
 
-void parse_buf(uint8_t *report_buffer/*, int size*/);
+
+void parse_buf(uint8_t *report_buffer, struct Button **state/*, int size*/);
