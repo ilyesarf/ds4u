@@ -7,12 +7,13 @@ struct Button{
     char name[10];
     uint8_t id;
     void (*get_state)(struct Button*, uint8_t data);
-    bool state;
+    int state;
 };
 
-struct Analog{
-    char name[10];
-    int trigger;
+struct State {
+    struct Button buttons[13];
+    struct Button dpad[4];
+    struct Button analogs[2];
 };
 
 static void btn_is_pressed(struct Button* button, uint8_t data){
@@ -27,5 +28,12 @@ static void dpad_is_pressed(struct Button* button, uint8_t data){
     }
 }
 
+static void get_trigger(struct Button* analog, uint8_t data){
+    analog->state = data;
+}
 
-void parse_buf(uint8_t *report_buffer, struct Button **state/*, int size*/);
+void parse_buttons(uint8_t *report_buffer, struct Button **buttons/*, int size*/);
+
+void parse_dpad(uint8_t* report_buffer, struct Button **dpad);
+
+void parse_state(uint8_t *report_buffer, struct State *state/*, int size*/);
