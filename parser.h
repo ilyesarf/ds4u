@@ -10,6 +10,11 @@ struct Button{
     bool state;
 };
 
+struct Analog{
+    char name[10];
+    int trigger;
+};
+
 static void btn_is_pressed(struct Button* button, uint8_t data){
     button->state = ((data & button->id) != 0);
 }
