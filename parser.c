@@ -30,7 +30,7 @@ void parse_dpad(uint8_t* report_buffer, struct Button **dpad){
 }
 
 void parse_analogs(uint8_t* report_buffer, struct Button **analogs){
-    for (int i=0; i<2;++i){
+    for (int i=0; i<6;++i){
         uint8_t data = report_buffer[analogs[i]->id];
 
         analogs[i]->get_state(analogs[i], data);

@@ -37,9 +37,9 @@ void init_dpad(struct Button *dpad[]){
 }
 
 void init_analogs(struct Button *analogs[]){
-    char* names[2] = {"l2", "r2"};
-    uint8_t ids[2] = {8, 9};
-    for (int i=0; i<2; i++){ 
+    char* names[6] = {"l-h", "l-v", "r-h", "r-v", "l2", "r2"};
+    uint8_t ids[6] = {1, 2, 3, 4, 8, 9};
+    for (int i=0; i<6; i++){ 
         analogs[i] = malloc(sizeof(struct Button));
         strcpy(analogs[i]->name, names[i]);
          
