@@ -14,6 +14,8 @@ struct State {
     struct Button buttons[13];
     struct Button dpad[4];
     struct Button analogs[2];
+
+    int battery;
 };
 
 static void btn_is_pressed(struct Button* button, uint8_t data){
@@ -31,6 +33,8 @@ static void dpad_is_pressed(struct Button* button, uint8_t data){
 static void get_trigger(struct Button* analog, uint8_t data){
     analog->state = data;
 }
+
+void parse_battery(uint8_t *report_buffer, int *battery);
 
 void parse_buttons(uint8_t *report_buffer, struct Button **buttons/*, int size*/);
 

@@ -1,5 +1,9 @@
 #include "parser.h"
 
+void parse_battery(uint8_t *report_buffer, int *battery){
+    *battery = report_buffer[30]%16;
+    printf("battery is at %d/15\n\n", *battery);
+}
 
 void parse_buttons(uint8_t *report_buffer, struct Button **buttons/*, int size*/){
     int n = 0;
@@ -13,7 +17,6 @@ void parse_buttons(uint8_t *report_buffer, struct Button **buttons/*, int size*/
         } 
         
         uint8_t data = report_buffer[n];
-
         buttons[i]->get_state(buttons[i], data);
         printf("Button `%s` with id `%02x` %s\n", buttons[i]->name, buttons[i]->id, (buttons[i]->state!=0) ? "is pressed" : "is not pressed");
     }
@@ -40,6 +43,7 @@ void parse_analogs(uint8_t* report_buffer, struct Button **analogs){
 }
 
 void parse_state(uint8_t* report_buffer, struct State* state){
+    parse_battery(report_buffer, &(state->battery));
     parse_buttons(report_buffer, &(state->buttons));
     parse_dpad(report_buffer, &(state->dpad));
     parse_analogs(report_buffer, &(state->analogs));
