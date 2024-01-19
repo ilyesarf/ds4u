@@ -6,7 +6,7 @@
 struct Button{
     char name[10];
     uint8_t id;
-    void (*is_pressed)(struct Button*, uint8_t data);
+    void (*get_state)(struct Button*, uint8_t data);
     bool state;
 };
 

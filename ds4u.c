@@ -5,40 +5,45 @@
 #include "parser.h"
 
 
-void init_buttons(int n, struct Button *state[]){
-    char* names[12] = {"square", "cross", "circle", "triangle", "l1", "r1", "l2", "r2", "share", "opt", "l3", "r3"};
-    for (int i=0; i<n; i++){
-        printf("btn %d : %s\n", i, names[i]);
-        strcpy(state[i]->name, names[i]);
+void init_buttons(int* n, struct Button *state[]){
+    char* names[13] = {"square", "cross", "circle", "triangle", "l1", "r1", "l2", "r2", "share", "opt", "l3", "r3", "psbtn"};
+
+    for (int i=0; i<13; i++){
+        strcpy(state[*n]->name, names[i]);
         if (i<4){
-            state[i]->id = pow(2, (i+4));
+            state[*n]->id = pow(2, (i+4));
+        } else if (i>=4 && i<12){
+            state[*n]->id = pow(2, (i-4));
         } else {
-            state[i]->id = pow(2, (i-4));
+            state[*n]->id = 1;
         }
 
-        state[i]->is_pressed = btn_is_pressed;
+        state[*n]->get_state = btn_is_pressed;
+        (*n)++;
     }
 
 }
 
-void init_dpad(int n, struct Button *state[]){
+void init_dpad(int *n, struct Button *state[]){
     char* names[4] = {"up", "right", "down", "left"};
-    for (int i=n-4; i<n; i++){ 
-        strcpy(state[i]->name, names[i-(n-4)]);
+    for (int i=0; i<4; i++){ 
+        strcpy(state[*n]->name, names[i]);
          
-        state[i]->id = (i-(n-4))*2;
-        state[i]->is_pressed = dpad_is_pressed;
+        state[*n]->id = i*2;
+        state[*n]->get_state = dpad_is_pressed;
+        (*n)++;
     }
 
 }
+
 
 void init_state(struct Button *state[]){
 
-    int n = 12; //number of buttons
+    int n = 0;
 
-    init_buttons(n, state);
-    init_dpad(n+4, state);
-    for (int i=0; i<n+4; i++){
+    init_buttons(&n, state);
+    init_dpad(&n, state);
+    for (int i=0; i<n; i++){
         printf("Button `%s` with id `%02x` is added to state\n", state[i]->name, state[i]->id);
     }
     
