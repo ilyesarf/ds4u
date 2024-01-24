@@ -4,19 +4,22 @@
 #include "reader.h"
 #include "parser.h"
 
-
+#define N_BTNS 14
 void init_buttons(struct Button *buttons[]){
-    char* names[13] = {"square", "cross", "circle", "triangle", "l1", "r1", "l2", "r2", "share", "opt", "l3", "r3", "psbtn"};
+    char* names[N_BTNS] = {"square", "cross", "circle", "triangle", "l1", "r1", "l2", "r2", "share", "opt", "l3", "r3", "psbtn", "tpad"};
 
-    for (int i=0; i<13; i++){
+    for (int i=0; i<N_BTNS; i++){
         buttons[i] = malloc(sizeof(struct Button));
+        
         strcpy(buttons[i]->name, names[i]);
         if (i<4){
             buttons[i]->id = pow(2, (i+4));
         } else if (i>=4 && i<12){
             buttons[i]->id = pow(2, (i-4));
-        } else {
+        } else if (i==12) {
             buttons[i]->id = 1;
+        } else {
+            buttons[i]->id = 2;
         }
 
         buttons[i]->get_state = btn_is_pressed;

@@ -7,12 +7,12 @@ void parse_battery(uint8_t *report_buffer, int *battery){
 
 void parse_buttons(uint8_t *report_buffer, struct Button **buttons/*, int size*/){
     int n = 0;
-    for (int i=0; i<13; ++i){
+    for (int i=0; i<14; ++i){
         if (i<4){
             n = 5;
         } else if (i>=4 && i<12){
             n = 6;
-        }  else if (i==12){
+        }  else if (i==12 || i==13){
             n = 7;
         } 
         
