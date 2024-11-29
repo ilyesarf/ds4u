@@ -6,7 +6,7 @@ void connect_device(libusb_context *context, libusb_device_handle **handle){
 
     *handle = libusb_open_device_with_vid_pid(context, VENDORID, PRODUCTID);
     if (*handle == NULL) {
-        fprintf(stderr, "Failed to open USB device. Try running program as superuser.\n");
+        fprintf(stderr, "Failed to open USB device. Check if device is connected or Try running program as superuser.\n");
         libusb_exit(context);
         exit(1);
     } 
